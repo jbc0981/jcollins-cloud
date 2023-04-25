@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+<title>About | Justin Collins</title>
+<meta name="description" content="Justin Collins">
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <div class="row">
+        <h1>About me</h1>
+    </div>
+    <div class="row">
+        <p>My name is Justin Collins. I have been in some form of Software Engineering for over a decade. Currently I am a
+            DevOps Engineer who is focused on AWS. Some of the things lately that I have been working with are Kubernetes,
+            Serverless, Python Development,
+            and Go Development.
+        </p>
+        <p>In my free time, I like to spend time with my family, watch sports (Roll Tide!), and have fun with my 2019 Jeep
+            Wrangler JLU.</p>
+        <p>My GitHub account can be found <a href="https://github.com/jbc0981" target="_blank">here</a></p>
+        <p>You can also view my resume <a href="{{url_for('static', filename='content/JustinCollinsResume.pdf')}}"
+                target="_blank">here</a></p>
+    </div>
+    </br>
+    <div class="row">
+        <div class="col-4">
+            <img src="{{url_for('static', filename='images/AWS-Logo-small-300x180.png')}}" class="img-fluid" alt="AWS">
+        </div>
+        <div class="col-4">
+            <img src="{{url_for('static', filename='images/kubernetes.png')}}" class="img-fluid" alt="Kubernetes">
+        </div>
+        <div class="col-4">
+            <img src="{{url_for('static', filename='images/Python-Logo-PNG-Image.png')}}" class="img-fluid" alt="Python">
+        </div>
+    </div>
+</div>
+{% endblock %}

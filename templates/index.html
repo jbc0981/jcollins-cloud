@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+<title>Justin Collins</title>
+<meta name="description" content="Justin Collins">
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <img src="{{url_for('static', filename='images/JustinCollins.jpeg')}}" class="img-fluid" alt="Justin Collins">
+        </div>
+        <div class="col-8">
+            <h1 style="margin-top:37px;">Welcome</h1>
+            <p class="lead">Thanks for visiting my page. Right now, it is a fairly simple site, but hopefully in the future there
+            will be more to this. Visit some of the links above for more.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
