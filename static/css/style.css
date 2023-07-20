@@ -9,3 +9,19 @@ main>.container {
   margin-left: unset;
   margin-right: auto !important;
 }
+
+body {
+  background-color: #d4e2eb;
+}
+
+.bg-light {
+  background-color: #2F5D8C!important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #ffffff;
+}
+
+.footer-text {
+  color:#ffffff;
+}
