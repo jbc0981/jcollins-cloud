@@ -4,3 +4,4 @@ This is my personal website. It is a simple Flask application hosted on GCP App 
 
 To Do:
 - Move static assests to CDN or Bucket Storage
+- GitHub Actions to CI/CD to GCP
