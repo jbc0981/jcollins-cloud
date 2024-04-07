@@ -11,17 +11,35 @@ main>.container {
 }
 
 body {
-  background-color: #d4e2eb;
+  background-color: #ffffff;
 }
 
-.bg-light {
-  background-color: #2F5D8C!important;
+.top-bg-light {
+  background-color: #d0d7de!important;
 }
 
 .navbar-light .navbar-nav .nav-link {
-  color: #ffffff;
+  color: #000000;
+}
+
+.bg-light {
+  background-color: #ffffff !important;
 }
 
 .footer-text {
-  color:#ffffff;
+  color:#000000;
+}
+
+.footer-text span {
+  font-size: small;
+  font-style: italic;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #d0d7de;
+  margin: 1em auto;
+  padding: 0;
 }
