@@ -31,5 +31,4 @@ jobs:
 
       # Deploy to App Engine
       - name: Deploy to GCP App Engine
-        run: |
-          gcloud app deploy --quiet
+        uses: uses: 'google-github-actions/deploy-appengine@v2'
