@@ -2,6 +2,7 @@ from flask import Flask, render_template, send_file, abort
 from google.cloud import storage
 import tempfile
 import os
+import logging
 
 app = Flask(__name__)
 
@@ -18,33 +19,36 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route('/static/<path:filename>')
+@app.route('/gcs-static/<path:filename>')
 def serve_static_file(filename):
-    """Serve static files from Google Cloud Storage with nested paths."""
     try:
-        # Get the bucket
-        bucket = storage_client.get_bucket(jcollins_cloud_static)
+        # Get the GCS bucket
+        bucket = storage_client.bucket(BUCKET_NAME)
         
-        # Get the blob (file object) from GCS
-        blob = bucket.blob(filename)  # filename will now include nested paths, like 'content/file.pdf'
+        # Get the file (blob) from GCS
+        blob = bucket.blob(filename)
         
-        # Check if the file exists in GCS
         if not blob.exists():
+            # Log an error if file not found
+            app.logger.error(f"File not found in GCS: {filename}")
             abort(404, description="File not found")
         
-        # Download the file to a temporary location
+        # Create a temporary file to download the blob
         temp_file = tempfile.NamedTemporaryFile(delete=False)
         blob.download_to_filename(temp_file.name)
         
-        # Serve the file
-        return send_file(temp_file.name)
-    
+        # Send the file with the original filename
+        return send_file(
+            temp_file.name,
+            download_name=filename  # Use the original filename
+        )
+
     except Exception as e:
-        abort(500, description=str(e))
-    finally:
-        # Cleanup the temporary file after serving it
-        if os.path.exists(temp_file.name):
-            os.remove(temp_file.name)
+        app.logger.error(f"Error serving file: {str(e)}")
+        abort(500, description="Internal Server Error")
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 if __name__ == "__main__":
     app.run(debug=True)
