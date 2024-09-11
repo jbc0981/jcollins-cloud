@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light top-bg-light">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="{{url_for('index')}}">
-            <img src="{{url_for('static', filename='images/logo.png')}}" alt="" height="30" width="30" class="d-inline-block"
+            <img src="{{url_for('serve_static_file', filename='images/logo.png')}}" alt="" height="30" width="30" class="d-inline-block"
                 style="position: relative;top: -2px;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -17,7 +17,7 @@
                     <a class="nav-link" href="https://github.com/jbc0981" target="_blank">GitHub</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('serve_static_file', filename='content/JustinCollinsResume.pdf')}}"
+                    <a class="nav-link" href="{{ url_for('serve_static_file', filename='content/JustinCollinsResume.pdf') }}"
                         target="_blank">Resume</a>
                 </li>
             </ul>
