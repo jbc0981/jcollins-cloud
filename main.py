@@ -20,13 +20,13 @@ def about():
 
 @app.route('/static/<path:filename>')
 def serve_static_file(filename):
-    """Serve static files from Google Cloud Storage."""
+    """Serve static files from Google Cloud Storage with nested paths."""
     try:
         # Get the bucket
         bucket = storage_client.get_bucket(BUCKET_NAME)
         
         # Get the blob (file object) from GCS
-        blob = bucket.blob(filename)
+        blob = bucket.blob(filename)  # filename will now include nested paths, like 'content/file.pdf'
         
         # Check if the file exists in GCS
         if not blob.exists():
