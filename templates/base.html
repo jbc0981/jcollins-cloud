@@ -5,7 +5,7 @@
   <!-- set the encoding of your site -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="{{url_for('static',filename='images/logo.png')}}" />
+  <link rel="icon" href="{{url_for('serve_static_file',filename='images/logo.png')}}" />
   {% block metatags %}
   {% endblock %}
 
@@ -14,7 +14,7 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
   <!-- Custom styles for this template -->
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="{{ url_for('serve_static_file', filename='css/style.css') }}" rel="stylesheet">
 
 </head>
 

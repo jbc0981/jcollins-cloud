@@ -23,7 +23,7 @@ def serve_static_file(filename):
     """Serve static files from Google Cloud Storage with nested paths."""
     try:
         # Get the bucket
-        bucket = storage_client.get_bucket(BUCKET_NAME)
+        bucket = storage_client.get_bucket(jcollins_cloud_static)
         
         # Get the blob (file object) from GCS
         blob = bucket.blob(filename)  # filename will now include nested paths, like 'content/file.pdf'

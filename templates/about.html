@@ -19,19 +19,19 @@
         <p>In my free time, I like to spend time with my family, watch sports (Roll Tide!), and have fun with my 2019 Jeep
             Wrangler JLU.</p>
         <p>My GitHub account can be found <a href="https://github.com/jbc0981" target="_blank">here</a></p>
-        <p>You can also view my resume <a href="{{url_for('static', filename='content/JustinCollinsResume.pdf')}}"
+        <p>You can also view my resume <a href="{{url_for('serve_static_file', filename='content/JustinCollinsResume.pdf')}}"
                 target="_blank">here</a></p>
     </div>
     </br>
     <div class="row">
         <div class="col-4">
-            <img src="{{url_for('static', filename='images/AWS-Logo-small-300x180.png')}}" class="img-fluid" alt="AWS">
+            <img src="{{url_for('serve_static_file', filename='images/AWS-Logo-small-300x180.png')}}" class="img-fluid" alt="AWS">
         </div>
         <div class="col-4">
-            <img src="{{url_for('static', filename='images/kubernetes-clear.png')}}" class="img-fluid" alt="Kubernetes">
+            <img src="{{url_for('serve_static_file', filename='images/kubernetes-clear.png')}}" class="img-fluid" alt="Kubernetes">
         </div>
         <div class="col-4">
-            <img src="{{url_for('static', filename='images/Python-Logo-PNG-Image.png')}}" class="img-fluid" alt="Python">
+            <img src="{{url_for('serve_static_file', filename='images/Python-Logo-PNG-Image.png')}}" class="img-fluid" alt="Python">
         </div>
     </div>
 </div>
