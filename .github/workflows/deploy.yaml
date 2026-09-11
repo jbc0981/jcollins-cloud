@@ -1,34 +1,77 @@
-name: Deploy to GCP App Engine
+# Builds the container image, pushes it to ECR, deploys it to App Runner,
+# and syncs static assets to S3 + CloudFront.
+#
+# Auth is via GitHub OIDC (see .platform/terraform/iam_oidc.tf) -- no
+# long-lived AWS access keys are stored in this repo's secrets.
+#
+# Required repository variables (Settings > Secrets and variables > Actions >
+# Variables), populated from the matching `terraform output` after applying
+# .platform/terraform/:
+#   AWS_DEPLOY_ROLE_ARN         <- github_actions_role_arn
+#   ECR_REPOSITORY              <- name portion of ecr_repository_url (defaults to "jcollins-cloud")
+#   APPRUNNER_SERVICE_ARN       <- apprunner_service_arn
+#   STATIC_BUCKET_NAME          <- static_bucket_name
+#   CLOUDFRONT_DISTRIBUTION_ID  <- cloudfront_distribution_id
+
+name: Build and Deploy to AWS
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+
 jobs:
   deploy:
-    name: Deploy to GCP
+    name: Build, push, and deploy
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Authenticate to GCP
-      - name: gcloud auth
-        uses: google-github-actions/auth@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      # Set up Google Cloud SDK
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+      - name: Log in to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
 
-      # Deploy to App Engine
-      - name: Deploy to GCP App Engine
-        uses: 'google-github-actions/deploy-appengine@v2'
+      - name: Build and push image
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # App Runner only supports linux/amd64 images.
+          docker build \
+            --platform linux/amd64 \
+            -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+            -t "$ECR_REGISTRY/$ECR_REPOSITORY:latest" \
+            .
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
+      - name: Deploy new image to App Runner
+        run: |
+          aws apprunner start-deployment \
+            --service-arn "${{ vars.APPRUNNER_SERVICE_ARN }}"
+
+      - name: Sync static assets to S3
+        run: |
+          aws s3 sync src/static_local/ "s3://${{ vars.STATIC_BUCKET_NAME }}/" --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"
