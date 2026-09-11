@@ -1,0 +1,15 @@
+# Copy to terraform.tfvars (gitignored) and adjust before running terraform.
+#
+# Recommended sequencing: leave domain_name empty for the first apply, verify
+# the site on the default App Runner/CloudFront URLs, then set domain_name
+# and apply again for the custom-domain + DNS cutover step.
+
+aws_region   = "us-east-1"
+project_name = "jcollins-cloud"
+
+domain_name      = ""
+app_subdomain    = "www"
+static_subdomain = "static"
+
+github_repo          = "jbc0981/jcollins-cloud"
+github_deploy_branch = "main"
