@@ -1,0 +1,12 @@
+.git
+.github
+.gitignore
+.gcloudignore
+.dockerignore
+README.md
+app.yaml
+.platform
+__pycache__
+*.pyc
+.venv
+venv
