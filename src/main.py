@@ -1,4 +1,6 @@
-from flask import Flask, render_template, url_for
+from datetime import datetime, timezone
+
+from flask import Flask, redirect, render_template, url_for
 import os
 
 # Static assets (images, css, the resume PDF) are served from CloudFront in
@@ -20,6 +22,13 @@ def inject_static_url():
     return dict(static_url=static_url)
 
 
+@app.context_processor
+def inject_current_year():
+    # Keeps the footer's copyright year correct without needing a manual
+    # yearly edit.
+    return dict(current_year=datetime.now(timezone.utc).year)
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -27,7 +36,9 @@ def index():
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    # The about-me content now lives on the home page; keep this route around
+    # as a redirect so any old bookmarks/links don't just 404.
+    return redirect(url_for("index"), code=301)
 
 
 if __name__ == "__main__":

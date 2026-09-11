@@ -35,6 +35,12 @@ body {
   font-style: italic;
 }
 
+/* Bootstrap's .lead defaults to 1.25rem, which reads a little large for a
+   multi-paragraph bio next to a portrait. Scale it down slightly here. */
+.intro-copy p.lead {
+  font-size: 1.15rem;
+}
+
 hr {
   display: block;
   height: 1px;
