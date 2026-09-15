@@ -13,17 +13,37 @@ resource "aws_ecr_repository" "app" {
 resource "aws_ecr_lifecycle_policy" "app" {
   repository = aws_ecr_repository.app.name
 
+  # ECR evaluates rules in rulePriority order, and an image matched by an
+  # earlier rule is excluded from evaluation by later rules. Rule 1 uses a
+  # countNumber no real deployment history could ever reach, so it never
+  # actually expires anything -- its only purpose is to pull every
+  # "latest"-tagged image (i.e. whatever's currently deployed) out of rule
+  # 2's count entirely, so App Runner's live image can never be pruned
+  # regardless of how long it's been since the last deploy.
   policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "Keep only the last 10 images"
-      selection = {
-        tagStatus   = "any"
-        countType   = "imageCountMoreThan"
-        countNumber = 10
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Never expire images tagged 'latest'"
+        selection = {
+          tagStatus     = "tagged"
+          tagPrefixList = ["latest"]
+          countType     = "imageCountMoreThan"
+          countNumber   = 9999
+        }
+        action = { type = "expire" }
+      },
+      {
+        rulePriority = 2
+        description  = "Keep only the last 10 other images"
+        selection = {
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = 10
+        }
+        action = { type = "expire" }
       }
-      action = { type = "expire" }
-    }]
+    ]
   })
 }
 

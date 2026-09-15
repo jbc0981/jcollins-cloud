@@ -25,3 +25,4 @@ main-private.py
 .platform/terraform/*.tfstate.*
 .platform/terraform/terraform.tfvars
 .platform/terraform/*.tfplan
+.platform/terraform/tfplan
